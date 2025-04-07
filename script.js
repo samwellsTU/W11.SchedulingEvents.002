@@ -3,6 +3,10 @@ const mtof = function (midiNote) {
   return 440 * Math.pow(2, (midiNote - 69) / 12);
 };
 
+const bpm2dur = function (bpm) {
+  return 60 / bpm;
+};
+
 // Super Locrian scale on Bb2 (MIDI note 46)
 const superLocrianBb2 = [46, 47, 49, 50, 52, 54, 56];
 
@@ -32,6 +36,7 @@ gainGate.connect(audCtx.destination);
 let onOff = false;
 let glidTimeSec = 0.25;
 let loopInterval = null;
+let tempo = 125; //ms
 
 // Set up button to start/stop the oscillator
 document.getElementById("onOffButton").addEventListener("click", (event) => {
@@ -70,7 +75,7 @@ document.getElementById("onOffButton").addEventListener("click", (event) => {
       //converto freq
 
       //update osicallot
-    }, 250);
+    }, tempo);
   } else {
     // Fade out
     gainGate.gain.setValueAtTime(gainGate.gain.value, now);
@@ -88,6 +93,7 @@ document.getElementById("tempo").addEventListener("input", (event) => {
   document.getElementById(
     "templeLabel"
   ).innerText = `${event.target.value} bpm`;
+  tempo = (bpm2dur(event.target.value) * 1000) / 4;
 });
 
 // Update slide label when slide slider is moved
